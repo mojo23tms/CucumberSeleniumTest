@@ -1,0 +1,30 @@
+package core;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
+
+public abstract class BasePage {
+
+    protected WebElement root;
+    protected Waiter waiter;
+    protected WebDriver driver;
+
+    public BasePage(WebDriver driver, Waiter waiter) {
+        this.driver = driver;
+        this.waiter = waiter;
+        PageFactory.initElements(driver, this);
+    }
+
+    public BasePage() {}
+
+    public WebElement getRoot() {
+        return waiter.forElementVisible(root);
+    }
+
+    public void waitForLoad() {
+        waiter.waitForLoad();
+        waiter.forElementVisible(this.getRoot());
+    }
+
+}
