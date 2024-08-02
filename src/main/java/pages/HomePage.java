@@ -24,6 +24,7 @@ public class HomePage extends BasePage {
 
     public HomePage openHomePage() {
         driver.get("https://mystore-testlab.coderslab.pl/");
+        waitForLoad();
         return this;
     }
 

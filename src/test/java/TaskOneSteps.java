@@ -19,17 +19,17 @@ public class TaskOneSteps extends TestBase {
     protected NewAddressPage newAddressPage;
     protected final String EMAIL = getUserMail();
     protected final String PASS = getUserPass();
+    protected Map<String, String> data;
 
     @Given("I'm on https:\\/\\/mystore-testlab.coderslab.pl\\/ logined as new user")
     public void loginAsCreatedUser() {
         this.homePage = new HomePage(driver, waiter);
-        homePage.waitForLoad();
         this.accPage = homePage.openHomePage()
                     .goToLoginPage()
                     .logIntoUser(EMAIL, PASS);
     }
 
-    @When("Clicks on the Addresses tile after logging in")
+    @When("Clicks on the {string} tile after logging in")
     public void navigateToAddressPage(String section) {
         this.addressesPage = accPage.openSection(section, AddressesPage.class);
         addressesPage.waitForLoad();
@@ -49,27 +49,22 @@ public class TaskOneSteps extends TestBase {
         newAddressPage.waitForLoad();
     }
 
-    @When("Fills out the {string} form")
-    public void fills_out_the_form(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-
     @When("Fills out the New address form with {string}, {string}, {string}, {string}, {string}, {string}")
     public void fills_out_the_new_address_form_with(String alias, String address, String city, String zipPostalCode, String country, String phone) {
-        final var data = Map.of("Alias", alias,
-                "Address", address,
+        data = Map.of("Alias", alias,
+                "Address1", address,
                 "City", city,
                 "Postcode", zipPostalCode,
-                "Country", country,
                 "Phone", phone);
         this.addressesPage = newAddressPage.setNewAddress(data);
     }
 
     @Then("Checks if the data in the added address is correct..")
     public void checks_if_the_data_in_the_added_address_is_correct() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        addressesPage.checkIfSuccessAlertIsPresent();
+        final var allAddresses = addressesPage.getAllAddresses();
+        assertThat(allAddresses)
+                .anyMatch(address -> address.containsAll(data.values()));
     }
 
     @When("Deletes the above address by clicking Delete")

@@ -31,6 +31,11 @@ public class AccountPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Override
+    public WebElement getRoot() {
+        return root;
+    }
+
     public <T extends BasePage> T openSection(String sectionName, Class<T> type) {
         sectionName = sectionName.toLowerCase();
         switch(sectionName) {

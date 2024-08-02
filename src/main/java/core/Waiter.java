@@ -7,15 +7,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class Waiter {
 
+    private WebDriver driver;
     private JavascriptExecutor jsExec;
-    private WebDriverWait newWait;
+    private final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
     public Waiter(WebDriver driver) {
-       this.jsExec = (JavascriptExecutor) driver;
-       this.newWait = new WebDriverWait(driver, Duration.ofSeconds(120));
+        this.driver = driver;
+        this.jsExec = (JavascriptExecutor) driver;
     }
 
     // Waiting method for whole browser page
@@ -34,10 +36,10 @@ public class Waiter {
         boolean jqueryReady = (Boolean) jsExec.executeScript("return jQuery.active==0");
 
         //Wait JQuery until it is Ready!
-        if(!jqueryReady) {
+        if (!jqueryReady) {
             try {
                 // Wait for jQuery to load
-                newWait.until(jQueryLoad);
+                newWait(DEFAULT_TIMEOUT).until(jQueryLoad);
             } catch (TimeoutException e) {
                 throw new AssertionError("jQuery loading isn't completed after 120 seconds!");
             }
@@ -56,9 +58,9 @@ public class Waiter {
         boolean angularReady = (Boolean) (jsExec.executeScript(childNodesReadyScript));
 
         //Wait ANGULAR until it is Ready!
-        if(!angularReady) {
+        if (!angularReady) {
             //Wait for Angular to load
-            newWait.until(nodesLoad);
+            newWait(DEFAULT_TIMEOUT).until(nodesLoad);
         }
     }
 
@@ -71,9 +73,9 @@ public class Waiter {
         boolean jsReady = (Boolean) jsExec.executeScript("return document.readyState == 'complete'");
 
         //Wait Javascript until it is Ready!
-        if(!jsReady) {
+        if (!jsReady) {
             //Wait for Javascript to load
-            newWait.until(jsLoad);
+            newWait(DEFAULT_TIMEOUT).until(jsLoad);
         }
     }
 
@@ -90,17 +92,26 @@ public class Waiter {
         }
     }
 
+    public List<WebElement> forAllElementsVisible(WebElement element) {
+        return newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.visibilityOfAllElements(element));
+    }
+
     // Checking element presence on page
     public WebElement forElementPresentBy(By selector) {
-        return newWait.until(ExpectedConditions.presenceOfElementLocated(selector));
+        return newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(selector));
     }
 
     public WebElement forElementVisibleBy(By selector) {
-        return newWait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        return newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.visibilityOfElementLocated(selector));
     }
 
     public WebElement forElementVisible(WebElement element) {
-        return newWait.ignoring(StaleElementReferenceException.class)
+        return newWait(DEFAULT_TIMEOUT).ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public WebElement forElementVisible(Duration timeout, WebElement element) {
+        return newWait(timeout).ignoring(StaleElementReferenceException.class)
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
@@ -110,7 +121,7 @@ public class Waiter {
     }
 
     public WebElement forElementSafelyClicked(WebElement element) {
-        final var elm = newWait.until(ExpectedConditions.elementToBeClickable(element));
+        final var elm = newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(element));
         elm.click();
         waitForLoad();
         return elm;
@@ -118,5 +129,9 @@ public class Waiter {
 
     public WebElement forChildElementSafelyClicked(WebElement root, By selector) {
         return forElementSafelyClicked(root.findElement(selector));
+    }
+
+    public WebDriverWait newWait(Duration timeout) {
+        return new WebDriverWait(driver, timeout);
     }
 }

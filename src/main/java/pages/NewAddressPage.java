@@ -5,6 +5,7 @@ import core.Waiter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.Map;
 
@@ -39,8 +40,8 @@ public class NewAddressPage extends BasePage {
     @FindBy(css = "input#field-postcode")
     protected WebElement postCodeInput;
 
-    @FindBy(css = "input#field-country")
-    protected WebElement countryInput;
+    @FindBy(css = "select#field-id_country")
+    protected WebElement countrySelect;
 
     @FindBy(css = "input#field-phone")
     protected WebElement phoneInput;
@@ -48,6 +49,10 @@ public class NewAddressPage extends BasePage {
     @FindBy(css = "button[type='submit']")
     protected WebElement submitAddressBtn;
 
+    @Override
+    public WebElement getRoot() {
+        return root;
+    }
 
     public NewAddressPage(WebDriver driver, Waiter waiter) {
         super(driver, waiter);
@@ -55,8 +60,23 @@ public class NewAddressPage extends BasePage {
 
     public AddressesPage setNewAddress(Map<String, String> addressData) {
         addressData.forEach((field, value) -> {
-            waiter.forElementSafelyClicked(cssSelector("input[name='" + field.toLowerCase() + "']"))
-                    .sendKeys(value);
+            field = field.toLowerCase();
+            switch(field) {
+                case "address":
+                    field = "address1";
+                case "address complement":
+                    field = "address2";
+            }
+
+            if (field.equals("country")) {
+                countrySelect = waiter.forElementSafelyClicked(countrySelect);
+                Select countryDropdown = new Select(countrySelect);
+                countryDropdown.selectByValue(value);
+            } else {
+                waiter.forElementSafelyClicked(cssSelector("input[name='" + field.toLowerCase() + "']"))
+                        .sendKeys(value);
+            }
+
         });
         waiter.forElementSafelyClicked(submitAddressBtn);
         return new AddressesPage(driver, waiter);

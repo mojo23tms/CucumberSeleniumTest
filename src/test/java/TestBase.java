@@ -4,14 +4,14 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class TestBase {
+class TestBase {
 
     protected WebDriver driver;
     protected Waiter waiter;
     private String userMail = "xecid76597@leacore.com";
     private String userPass = "Test123Test!";
 
-    public TestBase() {
+    TestBase() {
         this.driver = new ChromeDriver();
         this.waiter = new Waiter(driver);
     }

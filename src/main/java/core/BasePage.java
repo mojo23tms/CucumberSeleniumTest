@@ -18,9 +18,7 @@ public abstract class BasePage {
 
     public BasePage() {}
 
-    public WebElement getRoot() {
-        return waiter.forElementVisible(root);
-    }
+    public abstract WebElement getRoot();
 
     public void waitForLoad() {
         waiter.waitForLoad();
