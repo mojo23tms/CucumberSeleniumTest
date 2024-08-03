@@ -64,18 +64,20 @@ public class TaskOneSteps extends TestBase {
         addressesPage.checkIfSuccessAlertIsPresent();
         final var allAddresses = addressesPage.getAllAddresses();
         assertThat(allAddresses)
+                .as("There is no added data in address tiles!")
                 .anyMatch(address -> address.containsAll(data.values()));
     }
 
     @When("Deletes the above address by clicking Delete")
     public void deletes_the_above_address_by_clicking_delete() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        addressesPage.clickDeleteAddress("Kirich");
     }
 
     @Then("Checks if the address has been deleted.")
     public void checks_if_the_address_has_been_deleted() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        final var allAddress = addressesPage.getAllAddresses();
+        assertThat(allAddress)
+                .as("Added address is still on the address page!")
+                .noneMatch(address -> address.containsAll(data.values()));
     }
 }

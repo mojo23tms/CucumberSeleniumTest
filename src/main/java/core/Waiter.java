@@ -92,8 +92,8 @@ public class Waiter {
         }
     }
 
-    public List<WebElement> forAllElementsVisible(WebElement element) {
-        return newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.visibilityOfAllElements(element));
+    public List<WebElement> forAllElementsVisible(By selector) {
+        return newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(selector));
     }
 
     // Checking element presence on page
@@ -108,6 +108,10 @@ public class Waiter {
     public WebElement forElementVisible(WebElement element) {
         return newWait(DEFAULT_TIMEOUT).ignoring(StaleElementReferenceException.class)
                 .until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public WebElement forChildElementVisibleBy(WebElement root, By selector) {
+        return forElementVisible(root.findElement(selector));
     }
 
     public WebElement forElementVisible(Duration timeout, WebElement element) {
