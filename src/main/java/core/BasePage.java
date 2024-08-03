@@ -16,13 +16,10 @@ public abstract class BasePage {
         PageFactory.initElements(driver, this);
     }
 
-    public BasePage() {}
-
     public abstract WebElement getRoot();
 
     public void waitForLoad() {
         waiter.waitForLoad();
-        waiter.forElementVisible(this.getRoot());
     }
 
 }

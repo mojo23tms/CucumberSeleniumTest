@@ -1,20 +1,25 @@
 import core.Waiter;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-class TestBase {
+class TestBaseJUnit {
 
-    protected WebDriver driver;
-    protected Waiter waiter;
+    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
+    protected static WebDriver driver;
+    protected static Waiter waiter;
     private String userMail = "xecid76597@leacore.com";
     private String userPass = "Test123Test!";
 
-    public TestBase() {
+    @BeforeAll
+    public static void init() {
         ChromeOptions ch = new ChromeOptions();
         ch.addArguments("--disable-search-engine-choice-screen");
-        this.driver = new ChromeDriver(ch);
-        this.waiter = new Waiter(driver);
+        driverThreadLocal.set(new ChromeDriver());
+        driver = getDriver();
+        waiter = new Waiter(getDriver());
     }
 
     public String getUserMail() {
@@ -23,5 +28,9 @@ class TestBase {
 
     public String getUserPass() {
         return userPass;
+    }
+
+    public static WebDriver getDriver(){
+        return driverThreadLocal.get();
     }
 }
