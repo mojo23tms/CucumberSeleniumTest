@@ -1,8 +1,10 @@
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import pages.*;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.*;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -11,12 +13,11 @@ public class TaskTwoSteps extends TestBaseJUnit {
 
     protected HomePage homePage;
     protected AccountPage accPage;
-    protected AddressesPage addressesPage;
-    protected NewAddressPage newAddressPage;
-    protected TopPanel topPanel;
+    protected ProductPage productPage;
 
     protected final String EMAIL = getUserMail();
     protected final String PASS = getUserPass();
+    protected final String PRODUCT_NAME = "Hummingbird Printed Sweater";
 
     @Test
     @Order(1)
@@ -32,14 +33,22 @@ public class TaskTwoSteps extends TestBaseJUnit {
     @Order(2)
     @DisplayName("Chooses the Hummingbird Printed Sweater for purchase")
     public void chooses_the_hummingbird_printed_sweater_for_purchase() {
-        this.homePage = new TopPanel(driver, waiter).goToMainPage();
+        homePage.openHomePage();
+        final var choosenProduct = homePage.getProductByName(PRODUCT_NAME);
+        waiter.forElementSafelyClicked(choosenProduct);
+        this.productPage = new ProductPage(driver, waiter);
     }
 
     @Test
     @Order(3)
-    @DisplayName("checks if the discount on it is {int}%")
+    @DisplayName("checks if the discount on it is 20%")
     public void checks_if_the_discount_on_it_is() {
-        // Write code here that turns the phrase above into concrete actions
+        int discountPercentage = 20;
+        final var isDiscountCorrect = productPage.verifyDiscount(discountPercentage);
+        final var actualDiscount = productPage.getProductDiscount();
+        assertThat(isDiscountCorrect)
+                .as("Actual discount didn't match with expected! Expected: " + discountPercentage + "%, actual: " + actualDiscount + "!")
+                .isTrue();
     }
 
     @Test

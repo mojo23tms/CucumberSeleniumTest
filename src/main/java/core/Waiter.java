@@ -114,6 +114,11 @@ public class Waiter {
         return forElementVisible(root.findElement(selector));
     }
 
+    public List<WebElement> forAllChildElementsPresent(WebElement root, By selector) {
+        newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.presenceOfAllElementsLocatedBy(selector));
+        return root.findElements(selector);
+    }
+
     public WebElement forElementVisible(Duration timeout, WebElement element) {
         return newWait(timeout).ignoring(StaleElementReferenceException.class)
                 .until(ExpectedConditions.visibilityOf(element));

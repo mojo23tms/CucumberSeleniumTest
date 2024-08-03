@@ -25,9 +25,4 @@ public class TopPanel extends BasePage {
         super(driver, waiter);
         PageFactory.initElements(driver, this);
     }
-
-    public HomePage goToMainPage() {
-        waiter.forElementSafelyClicked(pageLogo);
-        return new HomePage(driver, waiter);
-    }
 }
