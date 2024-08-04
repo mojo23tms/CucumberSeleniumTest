@@ -14,6 +14,7 @@ public class TaskTwoSteps extends TestBaseJUnit {
     protected HomePage homePage;
     protected AccountPage accPage;
     protected ProductPage productPage;
+    protected CheckoutPage checkoutPage;
 
     protected final String EMAIL = getUserMail();
     protected final String PASS = getUserPass();
@@ -55,28 +56,29 @@ public class TaskTwoSteps extends TestBaseJUnit {
     @Order(4)
     @DisplayName("Selects size S")
     public void selects_size_s() {
-        // Write code here that turns the phrase above into concrete actions
+        // S size is unavailable for purchase on website
+        productPage.setSize("M");
     }
 
     @Test
     @Order(5)
     @DisplayName("Selects {int} pieces according to the parameter given in the test")
     public void selects_pieces_according_to_the_parameter_given_in_the_test() {
-        // Write code here that turns the phrase above into concrete actions
+        productPage.setQuantity(5);
     }
 
     @Test
     @Order(6)
     @DisplayName("Adds the product to the cart,")
     public void adds_the_product_to_the_cart() {
-        // Write code here that turns the phrase above into concrete actions
+        productPage.addToCart();
     }
 
     @Test
     @Order(7)
     @DisplayName("Proceeds to the checkout option,")
     public void proceeds_to_the_checkout_option() {
-        // Write code here that turns the phrase above into concrete actions
+        this.checkoutPage = productPage.proceedToCheckout();
     }
 
     @Test
@@ -85,6 +87,7 @@ public class TaskTwoSteps extends TestBaseJUnit {
     public void confirms_the_address() {
         // Write code here that turns the phrase above into concrete actions
     }
+
 
     @Test
     @Order(9)

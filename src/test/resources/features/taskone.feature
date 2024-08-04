@@ -18,5 +18,5 @@ Feature: Add new Address for newly created user
     When Deletes the above address by clicking Delete
     Then Checks if the address has been deleted.
     Examples:
-      | alias  | address                | city    | zip_postal_code | country | phone         |
-      | Kirich | 47, Slava Ukraine Ave. | Kherson | 73094           | Ukraine | +380998887766 |
+      | alias  | address               | city    | zip_postal_code | country | phone         |
+      | Kirich | 47, Grabiszynska Ave. | Wroclaw | 53505           | Ukraine | +380998887766 |

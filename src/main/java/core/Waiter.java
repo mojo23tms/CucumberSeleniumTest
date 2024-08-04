@@ -114,6 +114,10 @@ public class Waiter {
         return forElementVisible(root.findElement(selector));
     }
 
+    public WebElement forChildElementVisibleBy(Duration timeout, WebElement root, By selector) {
+        return forElementVisible(timeout, root.findElement(selector));
+    }
+
     public List<WebElement> forAllChildElementsPresent(WebElement root, By selector) {
         newWait(DEFAULT_TIMEOUT).until(ExpectedConditions.presenceOfAllElementsLocatedBy(selector));
         return root.findElements(selector);
@@ -139,6 +143,8 @@ public class Waiter {
     public WebElement forChildElementSafelyClicked(WebElement root, By selector) {
         return forElementSafelyClicked(root.findElement(selector));
     }
+
+
 
     public WebDriverWait newWait(Duration timeout) {
         return new WebDriverWait(driver, timeout);

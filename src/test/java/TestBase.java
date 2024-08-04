@@ -1,4 +1,5 @@
 import core.Waiter;
+import io.cucumber.java.After;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,6 +16,11 @@ class TestBase {
         ch.addArguments("--disable-search-engine-choice-screen");
         this.driver = new ChromeDriver(ch);
         this.waiter = new Waiter(driver);
+    }
+
+    @After
+    public void shutdown() {
+        driver.quit();
     }
 
     public String getUserMail() {

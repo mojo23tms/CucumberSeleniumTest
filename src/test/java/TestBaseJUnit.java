@@ -1,5 +1,7 @@
 import core.Waiter;
+import io.cucumber.java.After;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,9 +19,15 @@ class TestBaseJUnit {
     public static void init() {
         ChromeOptions ch = new ChromeOptions();
         ch.addArguments("--disable-search-engine-choice-screen");
-        driverThreadLocal.set(new ChromeDriver());
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        driverThreadLocal.set(new ChromeDriver(ch));
         driver = getDriver();
         waiter = new Waiter(getDriver());
+    }
+
+    @AfterAll
+    public static void shutdown() {
+        driver.quit();
     }
 
     public String getUserMail() {
