@@ -5,10 +5,12 @@ import core.Waiter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import pages.parameters.TestParameters;
 
 import java.time.Duration;
 
 import static org.openqa.selenium.By.*;
+import static pages.parameters.TestParameters.*;
 
 public class ProductPage extends BasePage {
 
@@ -60,11 +62,12 @@ public class ProductPage extends BasePage {
         return false;
     }
 
-    public void setSize(String size) {
+    public void setSize(ClothingSizes size) {
         Select sizeDropdown = new Select(waiter.forChildElementVisibleBy(productSize, cssSelector("select[aria-label='Size']")));
-        sizeDropdown.selectByVisibleText(size.toUpperCase());
+        sizeDropdown.selectByVisibleText(size.val.toUpperCase());
+        waiter.waitForLoad();
         try{
-            waiter.forChildElementVisibleBy(Duration.ofSeconds(10), productSize, cssSelector("option[title='" + size.toUpperCase() + "'][selected]"));
+            waiter.forChildElementVisibleBy(Duration.ofSeconds(15), productSize, xpath(".//span[normalize-space()='Size: " + size.val.toUpperCase() + "']"));
         } catch (TimeoutException | NoSuchElementException e) {
             throw new AssertionError("Option is NOT selected!");
         }
@@ -82,9 +85,9 @@ public class ProductPage extends BasePage {
         waiter.forElementVisible(cartContentRoot);
     }
 
-    public CheckoutPage proceedToCheckout() {
+    public CartPage proceedToCart() {
         waiter.forChildElementSafelyClicked(cartContentRoot, cssSelector("a[href*='controller=cart']"));
-        return new CheckoutPage(driver, waiter);
+        return new CartPage(driver, waiter);
     }
 
     public String getProductDiscount() {

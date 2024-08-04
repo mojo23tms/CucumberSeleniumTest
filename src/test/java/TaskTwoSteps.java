@@ -1,11 +1,13 @@
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import pages.*;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.*;
+import static pages.parameters.TestParameters.*;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
@@ -14,8 +16,9 @@ public class TaskTwoSteps extends TestBaseJUnit {
     protected HomePage homePage;
     protected AccountPage accPage;
     protected ProductPage productPage;
+    protected CartPage cartPage;
     protected CheckoutPage checkoutPage;
-
+    protected Map<String, String> dataAddress;
     protected final String EMAIL = getUserMail();
     protected final String PASS = getUserPass();
     protected final String PRODUCT_NAME = "Hummingbird Printed Sweater";
@@ -57,7 +60,7 @@ public class TaskTwoSteps extends TestBaseJUnit {
     @DisplayName("Selects size S")
     public void selects_size_s() {
         // S size is unavailable for purchase on website
-        productPage.setSize("M");
+        productPage.setSize(ClothingSizes.M);
     }
 
     @Test
@@ -78,42 +81,47 @@ public class TaskTwoSteps extends TestBaseJUnit {
     @Order(7)
     @DisplayName("Proceeds to the checkout option,")
     public void proceeds_to_the_checkout_option() {
-        this.checkoutPage = productPage.proceedToCheckout();
+        this.cartPage = productPage.proceedToCart();
+        this.checkoutPage = cartPage.proceedToCheckout();
     }
 
     @Test
     @Order(8)
     @DisplayName("Confirms the address,")
     public void confirms_the_address() {
-        // Write code here that turns the phrase above into concrete actions
+        this.dataAddress = Map.of("Address1", "1",
+                "City", "1",
+                "Postcode", "1",
+                "Phone", "1");
+        checkoutPage.confirmAddress(dataAddress.values());
     }
 
 
     @Test
     @Order(9)
-    @DisplayName("Selects the delivery method - PrestaShop {string},")
+    @DisplayName("Selects the delivery method - PrestaShop 'pick up in store'")
     public void selects_the_delivery_method_presta_shop() {
-        // Write code here that turns the phrase above into concrete actions
+        checkoutPage.selectDeliveryMethod(DeliveryOptions.SELF_PICKUP);
     }
 
     @Test
     @Order(10)
-    @DisplayName("Selects the payment option - Pay by Check,")
+    @DisplayName("Selects the payment option - Pay by Check")
     public void selects_the_payment_option_pay_by_check() {
-        // Write code here that turns the phrase above into concrete actions
+        checkoutPage.selectPaymentMethod(PaymentOptions.BY_CHECK);
     }
 
     @Test
     @Order(11)
-    @DisplayName("Clicks on {string},")
+    @DisplayName("Clicks on 'order with an obligation to pay'")
     public void clicks_on() {
-        // Write code here that turns the phrase above into concrete actions
+        // There is no such option when selecting Pay By Check
     }
 
     @Test
     @Order(12)
     @DisplayName("Takes a screenshot with the order confirmation and the amount.")
     public void takes_a_screenshot_with_the_order_confirmation_and_the_amount() {
-        // Write code here that turns the phrase above into concrete actions
+        super.captureScreenshot("orderConfirmation");
     }
 }

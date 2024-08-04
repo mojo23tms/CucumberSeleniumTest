@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Waiter {
 
-    private WebDriver driver;
-    private JavascriptExecutor jsExec;
+    private final WebDriver driver;
+    private final JavascriptExecutor jsExec;
     private final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
     public Waiter(WebDriver driver) {

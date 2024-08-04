@@ -1,13 +1,19 @@
 import core.Waiter;
-import io.cucumber.java.After;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-class TestBaseJUnit {
+import java.io.File;
+import java.io.IOException;
+
+public class TestBaseJUnit {
 
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
     protected static WebDriver driver;
@@ -22,7 +28,7 @@ class TestBaseJUnit {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driverThreadLocal.set(new ChromeDriver(ch));
         driver = getDriver();
-        waiter = new Waiter(getDriver());
+        waiter = new Waiter(driver);
     }
 
     @AfterAll
@@ -40,5 +46,16 @@ class TestBaseJUnit {
 
     public static WebDriver getDriver(){
         return driverThreadLocal.get();
+    }
+
+    public void captureScreenshot(String screenshotName) {
+        try {
+            driver.manage().window().maximize();
+            TakesScreenshot screenshot = (TakesScreenshot) driver;
+            File source = screenshot.getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(source, new File("./src/test/resources/" + screenshotName + ".png"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

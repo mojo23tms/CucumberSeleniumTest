@@ -10,7 +10,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
-
 public class TaskOneSteps extends TestBase {
     protected HomePage homePage;
     protected AccountPage accPage;
@@ -79,4 +78,6 @@ public class TaskOneSteps extends TestBase {
                 .as("Added address is still on the address page!")
                 .noneMatch(address -> address.containsAll(data.values()));
     }
+
+
 }

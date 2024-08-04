@@ -8,4 +8,6 @@ import org.junit.runner.RunWith;
         plugin = {"pretty", "html:report.html"},
         tags = "@done"
 )
-public class TestRunner { }
+public class TestRunner {
+
+}
